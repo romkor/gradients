@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { GradientEditor } from '../../components/GradientEditor';
 import { saveGradientFn } from '../../server/gradients';
@@ -6,6 +6,11 @@ import { createDefaultGradient } from '../../utils/gradient';
 import type { Gradient } from '../../utils/gradient';
 
 export const Route = createFileRoute('/gradient/new')({
+  beforeLoad: ({ context }) => {
+    if (!context.user) {
+      throw redirect({ to: '/login' })
+    }
+  },
   component: NewGradient,
 });
 

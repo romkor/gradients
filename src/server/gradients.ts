@@ -1,6 +1,8 @@
 import { createServerFn } from '@tanstack/react-start';
+import { getRequestHeaders } from '@tanstack/react-start/server';
 import { eq } from 'drizzle-orm';
 import { Schema } from 'effect';
+import { auth } from '../lib/auth';
 import { db } from '../db';
 import { gradients } from '../db/schema';
 import type { Gradient, ColorStop } from '../utils/gradient';
@@ -61,6 +63,10 @@ export const getGradientFn = createServerFn({ method: 'GET' })
 export const saveGradientFn = createServerFn({ method: 'POST' })
   .inputValidator(decodeGradient)
   .handler(async ({ data: gradient }): Promise<void> => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+    const ownerId = session?.user?.id ?? null;
+
     await db
       .insert(gradients)
       .values({
@@ -69,6 +75,7 @@ export const saveGradientFn = createServerFn({ method: 'POST' })
         type: gradient.type,
         angle: gradient.angle,
         stops: JSON.stringify(gradient.stops),
+        ownerId,
         createdAt: gradient.createdAt,
         updatedAt: gradient.updatedAt,
       })

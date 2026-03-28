@@ -1,0 +1,1 @@
+ALTER TABLE `gradients` ADD `owner_id` text;

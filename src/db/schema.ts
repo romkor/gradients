@@ -6,6 +6,7 @@ export const gradients = sqliteTable('gradients', {
   type: text('type').notNull(),
   angle: integer('angle').notNull(),
   stops: text('stops').notNull(), // JSON-serialized ColorStop[]
+  ownerId: text('owner_id'),
   createdAt: integer('created_at').notNull(),
   updatedAt: integer('updated_at').notNull(),
 });

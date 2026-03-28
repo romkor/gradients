@@ -1,7 +1,18 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import ThemeToggle from './ThemeToggle'
+import { authClient } from '../lib/auth-client'
+import { Route as RootRoute } from '../routes/__root'
 
 export default function Header() {
+  const { user } = RootRoute.useRouteContext()
+  const router = useRouter()
+
+  async function handleSignOut() {
+    await authClient.signOut()
+    await router.invalidate()
+    router.navigate({ to: '/' })
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[var(--header-bg)] px-4 backdrop-blur-lg">
       <nav className="page-wrap flex flex-wrap items-center gap-x-3 gap-y-2 py-3 sm:py-4">
@@ -71,6 +82,24 @@ export default function Header() {
           >
             Docs
           </a>
+
+          <div className="ml-2 flex items-center gap-2 border-l border-[var(--line)] pl-4">
+            {user ? (
+              <>
+                <span className="text-[var(--sea-ink-soft)] text-xs hidden sm:block">{user.name || user.email}</span>
+                <button
+                  onClick={handleSignOut}
+                  className="nav-link cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="nav-link">
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       </nav>
     </header>
