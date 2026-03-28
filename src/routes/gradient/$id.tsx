@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { GradientEditor } from '../../components/GradientEditor';
-import { getGradient, saveGradient } from '../../utils/storage';
+import { getGradientFn, saveGradientFn } from '../../server/gradients';
 import type { Gradient } from '../../utils/gradient';
 
 export const Route = createFileRoute('/gradient/$id')({
@@ -15,14 +15,11 @@ function EditGradient() {
 
   const { data: gradient, isLoading } = useQuery({
     queryKey: ['gradient', id],
-    queryFn: () => getGradient(id),
+    queryFn: () => getGradientFn({ data: id }),
   });
 
   const saveMutation = useMutation({
-    mutationFn: (g: Gradient) => {
-      saveGradient(g);
-      return Promise.resolve();
-    },
+    mutationFn: (g: Gradient) => saveGradientFn({ data: g }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['gradients'] });
       queryClient.invalidateQueries({ queryKey: ['gradient', id] });

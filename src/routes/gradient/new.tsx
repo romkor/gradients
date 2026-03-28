@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { GradientEditor } from '../../components/GradientEditor';
-import { saveGradient } from '../../utils/storage';
+import { saveGradientFn } from '../../server/gradients';
 import { createDefaultGradient } from '../../utils/gradient';
 import type { Gradient } from '../../utils/gradient';
 
@@ -14,10 +14,7 @@ function NewGradient() {
   const queryClient = useQueryClient();
 
   const saveMutation = useMutation({
-    mutationFn: (gradient: Gradient) => {
-      saveGradient(gradient);
-      return Promise.resolve();
-    },
+    mutationFn: (gradient: Gradient) => saveGradientFn({ data: gradient }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['gradients'] });
       navigate({ to: '/' });
