@@ -116,6 +116,7 @@ export function GradientEditor({ initial, onSave, onCancel }: GradientEditorProp
             <span className="text-sm text-gray-400">{gradient.angle}°</span>
           </div>
           <Slider
+            aria-label="Gradient angle"
             value={gradient.angle}
             onChange={updateAngle}
             minValue={0}
@@ -175,6 +176,7 @@ export function GradientEditor({ initial, onSave, onCancel }: GradientEditorProp
                   <span>{stop.position}%</span>
                 </div>
                 <Slider
+                  aria-label="Color stop position"
                   value={stop.position}
                   onChange={v => updateStop(stop.id, { position: v })}
                   minValue={0}
