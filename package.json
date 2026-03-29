@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "auth:generate": "pnpm dlx auth@latest generate",
+    "auth:generate": "pnpm auth:generate --output src/db/auth.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
   },
