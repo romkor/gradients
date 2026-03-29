@@ -1,9 +1,4 @@
-# user-auth Specification
-
-## Purpose
-Email/password authentication using better-auth with session management via TanStack Router context.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: User can register with email and password
 The system SHALL allow a visitor to create a new account by providing a name, email address, and password. Registration SHALL be handled by `better-auth`'s email/password plugin via the `/api/auth/sign-up/email` endpoint. Duplicate emails SHALL be rejected with a descriptive error. The `id` assigned to the new user record SHALL be a UUID v7 string.
@@ -24,8 +19,6 @@ The system SHALL allow a visitor to create a new account by providing a name, em
 - **WHEN** a visitor successfully registers
 - **THEN** the created user's `id` is a valid UUID v7 string (format `xxxxxxxx-xxxx-7xxx-xxxx-xxxxxxxxxxxx`)
 
----
-
 ### Requirement: User can sign in with email and password
 The system SHALL allow a registered user to sign in by providing their email and password via the `/api/auth/sign-in/email` endpoint. Invalid credentials SHALL be rejected without revealing which field is wrong. The `id` assigned to the new session record SHALL be a UUID v7 string.
 
@@ -44,51 +37,3 @@ The system SHALL allow a registered user to sign in by providing their email and
 #### Scenario: New session ID is UUID v7
 - **WHEN** a user successfully signs in
 - **THEN** the created session's `id` is a valid UUID v7 string
-
----
-
-### Requirement: User can sign out
-The system SHALL allow an authenticated user to end their session by triggering the sign-out action. The session cookie SHALL be invalidated server-side.
-
-#### Scenario: Successful sign-out
-- **WHEN** an authenticated user clicks the Sign Out control in the Header
-- **THEN** the session is invalidated, the cookie is cleared, and the user is redirected to the index page as a guest
-
----
-
-### Requirement: Session is available server-side in root loader
-The system SHALL read the current user session in the TanStack Router root route `beforeLoad` using `auth.api.getSession`. The resulting `user` object (or `null`) SHALL be passed into TanStack Router context so all child routes and components can access it without additional fetches.
-
-#### Scenario: Authenticated request
-- **WHEN** an authenticated user loads any page
-- **THEN** the root loader resolves with a `user` object containing at minimum `id`, `email`, and `name`
-
-#### Scenario: Unauthenticated request
-- **WHEN** a visitor with no session cookie loads any page
-- **THEN** the root loader resolves with `user: null`
-
----
-
-### Requirement: Header reflects authentication state
-The system SHALL update the Header component to display a "Sign In" link when the user is unauthenticated and a "Sign Out" button when authenticated.
-
-#### Scenario: Unauthenticated header
-- **WHEN** a visitor views any page
-- **THEN** the Header shows a "Sign In" link pointing to `/login`
-
-#### Scenario: Authenticated header
-- **WHEN** an authenticated user views any page
-- **THEN** the Header shows the user's name or email and a "Sign Out" button
-
----
-
-### Requirement: New gradient route requires authentication
-The system SHALL protect the `/gradient/new` route so that unauthenticated users are redirected to `/login`.
-
-#### Scenario: Unauthenticated user visits new gradient page
-- **WHEN** a visitor without a session navigates to `/gradient/new`
-- **THEN** they are redirected to `/login`
-
-#### Scenario: Authenticated user visits new gradient page
-- **WHEN** an authenticated user navigates to `/gradient/new`
-- **THEN** the page renders normally

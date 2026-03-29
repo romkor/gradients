@@ -16,8 +16,10 @@ export interface Gradient {
   updatedAt: number;
 }
 
+import { v7 as uuidv7 } from 'uuid';
+
 export function generateId(): string {
-  return crypto.randomUUID();
+  return uuidv7();
 }
 
 function hexToHsl(hex: string): [number, number, number] {
@@ -46,21 +48,21 @@ function hexToHsl(hex: string): [number, number, number] {
 
 // Three-tier hue names (dark / mid / light) across fine-grained hue ranges
 const HUE_TIERS: Array<{ max: number; dark: string; mid: string; light: string }> = [
-  { max: 10,  dark: 'Crimson',     mid: 'Ruby',        light: 'Blush' },
-  { max: 20,  dark: 'Scarlet',     mid: 'Coral',       light: 'Salmon' },
-  { max: 35,  dark: 'Amber',       mid: 'Tangerine',   light: 'Peach' },
-  { max: 50,  dark: 'Goldenrod',   mid: 'Saffron',     light: 'Honey' },
-  { max: 65,  dark: 'Olive',       mid: 'Citrus',      light: 'Lemon' },
-  { max: 100, dark: 'Forest',      mid: 'Emerald',     light: 'Sage' },
-  { max: 145, dark: 'Jade',        mid: 'Fern',        light: 'Mint' },
-  { max: 170, dark: 'Teal',        mid: 'Seafoam',     light: 'Aqua' },
-  { max: 200, dark: 'Ocean',       mid: 'Cerulean',    light: 'Sky' },
-  { max: 230, dark: 'Cobalt',      mid: 'Azure',       light: 'Cornflower' },
-  { max: 260, dark: 'Indigo',      mid: 'Sapphire',    light: 'Periwinkle' },
-  { max: 290, dark: 'Violet',      mid: 'Amethyst',    light: 'Lavender' },
-  { max: 320, dark: 'Magenta',     mid: 'Orchid',      light: 'Lilac' },
-  { max: 345, dark: 'Burgundy',    mid: 'Fuchsia',     light: 'Pink' },
-  { max: 360, dark: 'Crimson',     mid: 'Ruby',        light: 'Blush' },
+  { max: 10, dark: 'Crimson', mid: 'Ruby', light: 'Blush' },
+  { max: 20, dark: 'Scarlet', mid: 'Coral', light: 'Salmon' },
+  { max: 35, dark: 'Amber', mid: 'Tangerine', light: 'Peach' },
+  { max: 50, dark: 'Goldenrod', mid: 'Saffron', light: 'Honey' },
+  { max: 65, dark: 'Olive', mid: 'Citrus', light: 'Lemon' },
+  { max: 100, dark: 'Forest', mid: 'Emerald', light: 'Sage' },
+  { max: 145, dark: 'Jade', mid: 'Fern', light: 'Mint' },
+  { max: 170, dark: 'Teal', mid: 'Seafoam', light: 'Aqua' },
+  { max: 200, dark: 'Ocean', mid: 'Cerulean', light: 'Sky' },
+  { max: 230, dark: 'Cobalt', mid: 'Azure', light: 'Cornflower' },
+  { max: 260, dark: 'Indigo', mid: 'Sapphire', light: 'Periwinkle' },
+  { max: 290, dark: 'Violet', mid: 'Amethyst', light: 'Lavender' },
+  { max: 320, dark: 'Magenta', mid: 'Orchid', light: 'Lilac' },
+  { max: 345, dark: 'Burgundy', mid: 'Fuchsia', light: 'Pink' },
+  { max: 360, dark: 'Crimson', mid: 'Ruby', light: 'Blush' },
 ];
 
 // Achromatic names (low saturation)
@@ -74,26 +76,26 @@ const ACHROMATIC: Array<{ maxL: number; name: string }> = [
 ];
 
 // Modifiers chosen by perceptual properties (not arbitrary hue math)
-const MODIFIERS_DARK    = ['Abyss', 'Eclipse', 'Nightfall', 'Obsidian', 'Shadow', 'Void'];
-const MODIFIERS_DIM     = ['Dusk', 'Solstice', 'Twilight', 'Depth', 'Ember'];
-const MODIFIERS_MID     = ['Bloom', 'Drift', 'Haze', 'Reverie', 'Veil'];
-const MODIFIERS_BRIGHT  = ['Dawn', 'Glow', 'Radiance', 'Shimmer', 'Soleil'];
-const MODIFIERS_PALE    = ['Frost', 'Whisper', 'Opal', 'Vapor', 'Cloud'];
-const MODIFIERS_VIVID   = ['Blaze', 'Flare', 'Prism', 'Surge', 'Vivid'];
-const MODIFIERS_MUTED   = ['Ash', 'Dust', 'Fade', 'Smoke', 'Stone'];
+const MODIFIERS_DARK = ['Abyss', 'Eclipse', 'Nightfall', 'Obsidian', 'Shadow', 'Void'];
+const MODIFIERS_DIM = ['Dusk', 'Solstice', 'Twilight', 'Depth', 'Ember'];
+const MODIFIERS_MID = ['Bloom', 'Drift', 'Haze', 'Reverie', 'Veil'];
+const MODIFIERS_BRIGHT = ['Dawn', 'Glow', 'Radiance', 'Shimmer', 'Soleil'];
+const MODIFIERS_PALE = ['Frost', 'Whisper', 'Opal', 'Vapor', 'Cloud'];
+const MODIFIERS_VIVID = ['Blaze', 'Flare', 'Prism', 'Surge', 'Vivid'];
+const MODIFIERS_MUTED = ['Ash', 'Dust', 'Fade', 'Smoke', 'Stone'];
 
 // Adjectives that precede a color name for variety ("Deep Ocean", "Wild Rose", …)
-const ADJECTIVES        = ['Deep', 'Gentle', 'Hidden', 'Infinite', 'Soft', 'Vivid', 'Wild'];
+const ADJECTIVES = ['Deep', 'Gentle', 'Hidden', 'Infinite', 'Soft', 'Vivid', 'Wild'];
 
 // Poetic suffixes (always follow a color name) — single-color templates
-const POETIC_SUFFIXES   = ['Dream', 'Eden', 'Horizon', 'Mirage', 'Reverie', 'Serenity', 'Solace'];
+const POETIC_SUFFIXES = ['Dream', 'Eden', 'Horizon', 'Mirage', 'Reverie', 'Serenity', 'Solace'];
 
 // Templates for warm-dominant gradients
-const WARM_NAMES        = ['Autumn Ember', 'Desert Heat', 'Golden Hour', 'Harvest Flame', 'Solar Flare', 'Sunburst', 'Wildfire'];
+const WARM_NAMES = ['Autumn Ember', 'Desert Heat', 'Golden Hour', 'Harvest Flame', 'Solar Flare', 'Sunburst', 'Wildfire'];
 // Templates for cool-dominant gradients
-const COOL_NAMES        = ['Arctic Pulse', 'Cosmic Drift', 'Glacial Haze', 'Midnight Ocean', 'Northern Lights', 'Starlight', 'Stellar Void'];
+const COOL_NAMES = ['Arctic Pulse', 'Cosmic Drift', 'Glacial Haze', 'Midnight Ocean', 'Northern Lights', 'Starlight', 'Stellar Void'];
 // Templates for rainbow / high-variety gradients
-const RAINBOW_NAMES     = ['Aurora', 'Kaleidoscope', 'Opal Dream', 'Prism Bloom', 'Spectrum', 'Stained Glass', 'Sunrise Prism'];
+const RAINBOW_NAMES = ['Aurora', 'Kaleidoscope', 'Opal Dream', 'Prism Bloom', 'Spectrum', 'Stained Glass', 'Sunrise Prism'];
 
 // --- Helpers ---
 
@@ -121,7 +123,7 @@ function resolveColorName(h: number, s: number, l: number): string {
     return tier.name;
   }
   // Very dark or very light regardless of hue
-  if (l < 8)  return 'Midnight';
+  if (l < 8) return 'Midnight';
   if (l > 92) return 'Pearl';
 
   const tier = HUE_TIERS.find(t => h < t.max) ?? HUE_TIERS[0];
@@ -132,11 +134,11 @@ function resolveColorName(h: number, s: number, l: number): string {
 
 /** Choose a modifier that matches the dominant perceptual qualities of a color. */
 function resolveModifier(h: number, s: number, l: number, hash: number, seed = 0): string {
-  if (s > 75) return pick(MODIFIERS_VIVID,  hash, seed);
-  if (s < 20) return pick(MODIFIERS_MUTED,  hash, seed);
-  if (l < 20) return pick(MODIFIERS_DARK,   hash, seed);
-  if (l < 38) return pick(MODIFIERS_DIM,    hash, seed);
-  if (l < 62) return pick(MODIFIERS_MID,    hash, seed);
+  if (s > 75) return pick(MODIFIERS_VIVID, hash, seed);
+  if (s < 20) return pick(MODIFIERS_MUTED, hash, seed);
+  if (l < 20) return pick(MODIFIERS_DARK, hash, seed);
+  if (l < 38) return pick(MODIFIERS_DIM, hash, seed);
+  if (l < 62) return pick(MODIFIERS_MID, hash, seed);
   if (l < 80) return pick(MODIFIERS_BRIGHT, hash, seed);
   return pick(MODIFIERS_PALE, hash, seed);
 }
@@ -161,9 +163,9 @@ export function generateGradientName(stops: ColorStop[]): string {
   if (stops.length === 1) {
     const [h, s, l] = hslList[0];
     const colorName = resolveColorName(h, s, l);
-    const modifier  = resolveModifier(h, s, l, hash);
+    const modifier = resolveModifier(h, s, l, hash);
     // Alternate between three single-color templates
-    const template  = hash % 3;
+    const template = hash % 3;
     if (template === 0) return `${colorName} ${modifier}`;
     if (template === 1) return `${pick(ADJECTIVES, hash, 7)} ${colorName}`;
     return `${colorName} ${pick(POETIC_SUFFIXES, hash, 13)}`;
@@ -229,10 +231,10 @@ export function generateGradientName(stops: ColorStop[]): string {
   // --- Two distinct color names ---
   // Pick one of several evocative dual-color templates deterministically
   const dominantMod = avgL < 45
-    ? pick(MODIFIERS_DIM,    hash, 2)
+    ? pick(MODIFIERS_DIM, hash, 2)
     : avgS > 60
       ? pick(MODIFIERS_VIVID, hash, 2)
-      : pick(MODIFIERS_MID,   hash, 2);
+      : pick(MODIFIERS_MID, hash, 2);
 
   const template = hash % 6;
   switch (template) {
