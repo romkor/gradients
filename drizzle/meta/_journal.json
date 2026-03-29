@@ -15,6 +15,13 @@
       "when": 1774727773725,
       "tag": "0001_clean_the_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1774776166702,
+      "tag": "0002_striped_cloak",
+      "breakpoints": true
     }
   ]
 }
