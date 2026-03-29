@@ -2,9 +2,11 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from 'react-aria-components';
 import { GradientCard } from '../components/GradientCard';
-import { loadGradientsFn, deleteGradientFn } from '../server/gradients';
+import { deleteGradientFn, gradientsQueryOptions } from '../server/gradients';
 
 export const Route = createFileRoute('/')({
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(gradientsQueryOptions()),
   component: Home,
 });
 
@@ -12,10 +14,7 @@ function Home() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: gradients = [] } = useQuery({
-    queryKey: ['gradients'],
-    queryFn: () => loadGradientsFn(),
-  });
+  const { data: gradients = [] } = useQuery(gradientsQueryOptions());
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteGradientFn({ data: id }),

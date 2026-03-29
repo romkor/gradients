@@ -1,13 +1,15 @@
-import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { getSession } from '../lib/auth.functions'
 import Header from '../components/Header'
 
 import appCss from '../styles.css?url'
 
-const queryClient = new QueryClient()
+interface RouterContext {
+  queryClient: QueryClient
+}
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   beforeLoad: async () => {
     const session = await getSession()
     return { user: session?.user ?? null }
@@ -46,6 +48,7 @@ function RootLayout() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { queryClient } = Route.useRouteContext()
   return (
     <html lang="en">
       <head>

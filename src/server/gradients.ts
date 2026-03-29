@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start';
 import { getRequestHeaders } from '@tanstack/react-start/server';
 import { eq } from 'drizzle-orm';
 import { Schema } from 'effect';
+import { queryOptions } from '@tanstack/react-query';
 import { auth } from '../lib/auth';
 import { db } from '../db';
 import { gradients } from '../db/schema';
@@ -95,4 +96,18 @@ export const deleteGradientFn = createServerFn({ method: 'POST' })
   .inputValidator(decodeId)
   .handler(async ({ data: id }): Promise<void> => {
     await db.delete(gradients).where(eq(gradients.id, id));
+  });
+
+// ---------- Query Options ----------
+
+export const gradientsQueryOptions = () =>
+  queryOptions({
+    queryKey: ['gradients'],
+    queryFn: () => loadGradientsFn(),
+  });
+
+export const gradientQueryOptions = (id: string) =>
+  queryOptions({
+    queryKey: ['gradient', id],
+    queryFn: () => getGradientFn({ data: id }),
   });
