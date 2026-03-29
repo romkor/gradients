@@ -6,6 +6,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { auth } from '../lib/auth';
 import { db } from '../db';
 import { gradients, publishedGradients } from '../db/schema';
+import { users } from '../db/auth';
 import type { Gradient, ColorStop } from '../utils/gradient';
 
 // ---------- Effect v4 Schemas ----------
@@ -34,7 +35,7 @@ const decodeGradient = Schema.decodeUnknownSync(GradientSchema);
 // ---------- Server Functions ----------
 
 export const loadGradientsFn = createServerFn({ method: 'GET' }).handler(
-  async (): Promise<(Gradient & { isPublished: boolean })[]> => {
+  async (): Promise<(Gradient & { isPublished: boolean; creatorName: string | null })[]> => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
     const userId = session?.user?.id ?? null;
@@ -50,9 +51,11 @@ export const loadGradientsFn = createServerFn({ method: 'GET' }).handler(
         createdAt: gradients.createdAt,
         updatedAt: gradients.updatedAt,
         publishedAt: publishedGradients.createdAt,
+        creatorName: users.name,
       })
       .from(gradients)
       .leftJoin(publishedGradients, eq(gradients.id, publishedGradients.gradientId))
+      .leftJoin(users, eq(gradients.ownerId, users.id))
       .where(
         userId
           ? or(isNotNull(publishedGradients.gradientId), eq(gradients.ownerId, userId))
@@ -69,6 +72,7 @@ export const loadGradientsFn = createServerFn({ method: 'GET' }).handler(
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       isPublished: row.publishedAt !== null,
+      creatorName: row.creatorName ?? null,
     }));
   },
 );
