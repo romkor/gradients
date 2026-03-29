@@ -1,7 +1,12 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { GradientEditor } from '../../components/GradientEditor';
-import { saveGradientFn, gradientQueryOptions } from '../../server/gradients';
+import {
+  saveGradientFn,
+  publishGradientFn,
+  unpublishGradientFn,
+  gradientQueryOptions,
+} from '../../server/gradients';
 import type { Gradient } from '../../utils/gradient';
 
 export const Route = createFileRoute('/gradient/$id')({
@@ -23,6 +28,22 @@ function EditGradient() {
       queryClient.invalidateQueries({ queryKey: ['gradients'] });
       queryClient.invalidateQueries({ queryKey: ['gradient', id] });
       navigate({ to: '/' });
+    },
+  });
+
+  const publishMutation = useMutation({
+    mutationFn: () => publishGradientFn({ data: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['gradients'] });
+      queryClient.invalidateQueries({ queryKey: ['gradient', id] });
+    },
+  });
+
+  const unpublishMutation = useMutation({
+    mutationFn: () => unpublishGradientFn({ data: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['gradients'] });
+      queryClient.invalidateQueries({ queryKey: ['gradient', id] });
     },
   });
 
@@ -61,6 +82,25 @@ function EditGradient() {
             ← Back
           </button>
           <h1 className="text-2xl font-bold text-white">Edit Gradient</h1>
+          <div className="ml-auto">
+            {gradient.isPublished ? (
+              <button
+                onClick={() => unpublishMutation.mutate()}
+                disabled={unpublishMutation.isPending}
+                className="px-4 py-1.5 rounded-lg text-sm font-medium bg-gray-700 hover:bg-gray-600 text-white transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {unpublishMutation.isPending ? 'Unpublishing…' : 'Unpublish'}
+              </button>
+            ) : (
+              <button
+                onClick={() => publishMutation.mutate()}
+                disabled={publishMutation.isPending}
+                className="px-4 py-1.5 rounded-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {publishMutation.isPending ? 'Publishing…' : 'Publish'}
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
